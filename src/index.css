@@ -1,0 +1,35 @@
+@import 'tailwindcss';
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+button,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+/* Horizontal string line drawn through the middle of a tab cell */
+.string-line {
+  background-image: linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--color-zinc-700) calc(50% - 0.5px), var(--color-zinc-700) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
