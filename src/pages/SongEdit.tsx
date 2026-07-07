@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useLiveQuery } from 'dexie-react-hooks'
 import type { ChordContent, Song, Step, TabContent } from '../types'
@@ -11,7 +11,7 @@ import TabStepSheet from '../components/TabStepSheet'
 import { StrummingEditor } from '../components/Strumming'
 import SyncIndicator from '../components/SyncIndicator'
 import { Stepper, btnGhost, btnOutline, btnSolid, inputCls, EmptyHint } from '../components/ui'
-import { ArrowDownIcon, ArrowUpIcon, BackIcon, CloseIcon, CopyIcon, PencilIcon, PlayIcon, PlusIcon, TrashIcon } from '../components/icons'
+import { ArrowDownIcon, ArrowUpIcon, BackIcon, ChevronIcon, CloseIcon, CopyIcon, PencilIcon, PlayIcon, PlusIcon, TrashIcon } from '../components/icons'
 
 function TapTempo({ onTempo }: { onTempo: (bpm: number) => void }) {
   const taps = useRef<number[]>([])
@@ -31,6 +31,15 @@ function TapTempo({ onTempo }: { onTempo: (bpm: number) => void }) {
     <button className={`${btnOutline} h-9 px-3 text-sm`} onClick={tap}>
       Tap
     </button>
+  )
+}
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-[11px] font-semibold tracking-wider text-soft uppercase">{label}</span>
+      {children}
+    </div>
   )
 }
 
@@ -88,14 +97,14 @@ export default function SongEdit() {
 
   if (missing)
     return (
-      <div className="p-8 text-center text-zinc-400">
+      <div className="p-8 text-center text-soft">
         Song not found.{' '}
-        <Link to="/" className="text-amber-300 underline">
+        <Link to="/" className="text-wood underline">
           Back to library
         </Link>
       </div>
     )
-  if (!song) return <div className="p-8 text-center text-zinc-500">Loading…</div>
+  if (!song) return <div className="p-8 text-center text-faint">Loading…</div>
 
   const beatsPerBar = song.timeSignature.beats
 
@@ -167,7 +176,7 @@ export default function SongEdit() {
         <Link to="/" className={`${btnGhost} h-10 w-10`} aria-label="Back to library">
           <BackIcon />
         </Link>
-        <h1 className="flex-1 text-lg font-semibold">Edit song</h1>
+        <h1 className="font-display flex-1 text-xl font-bold text-wood-deep">Edit song</h1>
         <SyncIndicator />
         <Link to={`/song/${song.id}/play`} className={`${btnSolid} h-10 gap-1.5 px-4 text-sm`}>
           <PlayIcon width={16} height={16} /> Play
@@ -175,28 +184,28 @@ export default function SongEdit() {
       </header>
 
       {/* song meta */}
-      <div className="mb-6 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4">
+      <div className="mb-6 rounded-2xl border border-line bg-surface p-4 shadow-sm">
         <input
-          className="w-full bg-transparent text-xl font-bold placeholder:text-zinc-600 focus:outline-none"
+          className="font-display w-full bg-transparent text-2xl font-bold placeholder:text-faint focus:outline-none"
           placeholder="Song title"
           value={song.title}
           onChange={(e) => update((d) => (d.title = e.target.value))}
           onFocus={(e) => song.title === 'Untitled song' && e.target.select()}
         />
         <input
-          className="mt-1 w-full bg-transparent text-sm text-zinc-400 placeholder:text-zinc-600 focus:outline-none"
+          className="mt-1 w-full bg-transparent text-sm text-soft placeholder:text-faint focus:outline-none"
           placeholder="Artist"
           value={song.artist}
           onChange={(e) => update((d) => (d.artist = e.target.value))}
         />
-        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Tempo</span>
-            <Stepper value={song.tempo} min={40} max={240} step={2} label="tempo" onChange={(v) => update((d) => (d.tempo = v))} />
-            <TapTempo onTempo={(bpm) => update((d) => (d.tempo = bpm))} />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Time</span>
+        <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-3">
+          <Field label="Tempo">
+            <div className="flex items-center gap-2">
+              <Stepper value={song.tempo} min={40} max={240} step={2} label="tempo" onChange={(v) => update((d) => (d.tempo = v))} />
+              <TapTempo onTempo={(bpm) => update((d) => (d.tempo = bpm))} />
+            </div>
+          </Field>
+          <Field label="Time">
             <select
               className={`${inputCls} h-9 py-0`}
               value={`${song.timeSignature.beats}/${song.timeSignature.unit}`}
@@ -214,15 +223,13 @@ export default function SongEdit() {
                 <option key={`${t.beats}/${t.unit}`}>{`${t.beats}/${t.unit}`}</option>
               ))}
             </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Capo</span>
+          </Field>
+          <Field label="Capo">
             <Stepper value={song.capo} min={0} max={11} label="capo" format={(v) => (v === 0 ? '—' : String(v))} onChange={(v) => update((d) => (d.capo = v))} />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">Folder</span>
+          </Field>
+          <Field label="Folder">
             <select
-              className={`${inputCls} h-9 max-w-40 py-0`}
+              className={`${inputCls} h-9 max-w-44 py-0`}
               value={song.folderId ?? ''}
               onChange={(e) => update((d) => (d.folderId = e.target.value || null))}
             >
@@ -233,16 +240,16 @@ export default function SongEdit() {
                 </option>
               ))}
             </select>
-          </div>
+          </Field>
         </div>
       </div>
 
       {/* sections */}
       {song.sections.map((section, si) => (
-        <section key={section.id} className="mb-6">
+        <section key={section.id} className="mb-7">
           <div className="mb-1 flex items-center gap-1">
             <input
-              className="min-w-0 flex-1 bg-transparent text-sm font-bold tracking-wide text-amber-300/90 uppercase placeholder:text-zinc-600 focus:outline-none"
+              className="font-display min-w-0 flex-1 bg-transparent text-sm font-bold tracking-widest text-wood-deep uppercase placeholder:text-faint focus:outline-none"
               value={section.name}
               placeholder="Section name"
               onChange={(e) => update((d) => (d.sections[si].name = e.target.value))}
@@ -273,7 +280,7 @@ export default function SongEdit() {
               <CopyIcon width={15} height={15} />
             </button>
             <button
-              className={`${btnGhost} h-8 w-8 text-rose-400/80`}
+              className={`${btnGhost} h-8 w-8 text-rose-700/80`}
               onClick={() => {
                 if (section.steps.length === 0 || confirm(`Delete section "${section.name}"?`)) {
                   update((d) => d.sections.splice(si, 1))
@@ -301,19 +308,19 @@ export default function SongEdit() {
 
           {/* selected step toolbar */}
           {selected?.sectionId === section.id && selectedStep && (
-            <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-2 py-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl border border-line bg-surface px-2 py-2 shadow-sm">
               <button className={`${btnOutline} h-9 gap-1 px-3 text-sm`} onClick={() => openStepEditor(section.id, selectedStep)}>
                 <PencilIcon width={14} height={14} /> Edit
               </button>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs text-zinc-500">Beats</span>
+                <span className="text-xs text-soft">Beats</span>
                 <Stepper value={selectedStep.beats} min={1} max={32} label="beats" onChange={(v) => mutateStep(section.id, selectedStep.id, (st) => (st.beats = v))} />
               </div>
               <button className={`${btnGhost} h-9 w-9`} onClick={() => moveStep(-1)} aria-label="Move step left">
-                ◀
+                <ChevronIcon width={15} height={15} className="rotate-180" />
               </button>
               <button className={`${btnGhost} h-9 w-9`} onClick={() => moveStep(1)} aria-label="Move step right">
-                ▶
+                <ChevronIcon width={15} height={15} />
               </button>
               <button
                 className={`${btnGhost} h-9 w-9`}
@@ -333,7 +340,7 @@ export default function SongEdit() {
                 <CopyIcon width={15} height={15} />
               </button>
               <button
-                className={`${btnGhost} h-9 w-9 text-rose-400`}
+                className={`${btnGhost} h-9 w-9 text-rose-700`}
                 onClick={() => {
                   update((d) => {
                     const sec = d.sections.find((s) => s.id === section.id)
@@ -361,7 +368,7 @@ export default function SongEdit() {
             </button>
             {!section.strummingPattern && (
               <button
-                className={`${btnGhost} h-9 px-3 text-sm text-zinc-400`}
+                className={`${btnGhost} h-9 px-3 text-sm`}
                 onClick={() => update((d) => (d.sections[si].strummingPattern = defaultPattern(beatsPerBar)))}
               >
                 <PlusIcon width={14} height={14} /> Strumming
@@ -370,11 +377,11 @@ export default function SongEdit() {
           </div>
 
           {section.strummingPattern && (
-            <div className="mt-3 rounded-xl border border-zinc-800 bg-zinc-900/60 p-3">
+            <div className="mt-3 rounded-xl border border-line bg-surface p-3 shadow-sm">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-xs font-semibold tracking-wide text-zinc-400 uppercase">Strumming</span>
+                <span className="text-[11px] font-semibold tracking-wider text-soft uppercase">Strumming</span>
                 <button
-                  className="text-xs text-zinc-500 hover:text-rose-400"
+                  className="text-xs text-soft hover:text-rose-700"
                   onClick={() => update((d) => (d.sections[si].strummingPattern = null))}
                 >
                   Remove

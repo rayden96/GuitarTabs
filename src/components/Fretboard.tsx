@@ -34,13 +34,13 @@ export default function Fretboard({ shape, onChange }: { shape: FretShape; onCha
       {/* finger picker + fret window shifter */}
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <span className="mr-1 text-xs text-zinc-500">Finger</span>
+          <span className="mr-1 text-xs text-soft">Finger</span>
           {[1, 2, 3, 4, null].map((f) => (
             <button
               key={String(f)}
               onClick={() => setFinger(f)}
               className={`h-8 w-8 rounded-full text-sm font-semibold transition-colors ${
-                finger === f ? 'bg-amber-400 text-zinc-950' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
+                finger === f ? 'bg-wood text-[#fdf6e6]' : 'bg-cream text-soft hover:bg-line'
               }`}
             >
               {f ?? '·'}
@@ -48,13 +48,13 @@ export default function Fretboard({ shape, onChange }: { shape: FretShape; onCha
           ))}
         </div>
         <div className="flex items-center gap-1 text-sm">
-          <button className="h-8 w-8 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700" onClick={() => shiftBase(-1)} aria-label="Lower fret window">
+          <button className="h-8 w-8 rounded-lg bg-cream text-soft hover:bg-line" onClick={() => shiftBase(-1)} aria-label="Lower fret window">
             ‹
           </button>
-          <span className="min-w-14 text-center text-xs text-zinc-400">
+          <span className="min-w-14 text-center text-xs text-soft">
             fret {base}–{base + windowSize - 1}
           </span>
-          <button className="h-8 w-8 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700" onClick={() => shiftBase(1)} aria-label="Raise fret window">
+          <button className="h-8 w-8 rounded-lg bg-cream text-soft hover:bg-line" onClick={() => shiftBase(1)} aria-label="Raise fret window">
             ›
           </button>
         </div>
@@ -66,19 +66,19 @@ export default function Fretboard({ shape, onChange }: { shape: FretShape; onCha
           const cur = shape.frets[s]
           return (
             <div key={s} className="contents">
-              <div className="flex h-10 items-center justify-center font-mono text-xs text-zinc-500">{STRING_NAMES[s]}</div>
+              <div className="flex h-10 items-center justify-center font-mono text-xs text-faint">{STRING_NAMES[s]}</div>
               {/* open / mute controls */}
               <div className="flex h-10 items-center justify-center gap-1">
                 <button
                   onClick={() => set(s, cur === 0 ? null : 0)}
-                  className={`h-7 w-6 rounded text-xs font-bold ${cur === 0 ? 'bg-emerald-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+                  className={`h-7 w-6 rounded text-xs font-bold ${cur === 0 ? 'bg-emerald-600 text-white' : 'bg-cream text-soft hover:bg-line'}`}
                   aria-label={`String ${STRING_NAMES[s]} open`}
                 >
                   O
                 </button>
                 <button
                   onClick={() => set(s, cur === 'x' ? null : 'x')}
-                  className={`h-7 w-6 rounded text-xs font-bold ${cur === 'x' ? 'bg-rose-500 text-zinc-950' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'}`}
+                  className={`h-7 w-6 rounded text-xs font-bold ${cur === 'x' ? 'bg-rose-600 text-white' : 'bg-cream text-soft hover:bg-line'}`}
                   aria-label={`String ${STRING_NAMES[s]} muted`}
                 >
                   ×
@@ -91,13 +91,13 @@ export default function Fretboard({ shape, onChange }: { shape: FretShape; onCha
                   <button
                     key={fret}
                     onClick={() => tapFret(s, fret)}
-                    className={`string-line relative h-10 border-l border-zinc-700 ${w === windowSize - 1 ? 'border-r' : ''} ${
-                      base === 1 && w === 0 ? 'border-l-[3px] border-l-zinc-500' : ''
+                    className={`string-line relative h-10 border-l border-string/80 ${w === windowSize - 1 ? 'border-r' : ''} ${
+                      base === 1 && w === 0 ? 'border-l-[3px] border-l-wood-deep' : ''
                     }`}
                     aria-label={`String ${STRING_NAMES[s]} fret ${fret}`}
                   >
                     {active && (
-                      <span className="absolute top-1/2 left-1/2 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-amber-400 text-sm font-bold text-zinc-950">
+                      <span className="absolute top-1/2 left-1/2 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-wood text-sm font-bold text-[#fdf6e6] shadow-sm">
                         {shape.fingers[s] ?? ''}
                       </span>
                     )}
@@ -111,7 +111,7 @@ export default function Fretboard({ shape, onChange }: { shape: FretShape; onCha
         <div />
         <div />
         {Array.from({ length: windowSize }, (_, w) => (
-          <div key={w} className="pt-1 text-center text-xs text-zinc-500">
+          <div key={w} className="pt-1 text-center text-xs text-faint">
             {base + w}
           </div>
         ))}

@@ -47,10 +47,10 @@ function encodePng(size, rgba) {
 const clamp01 = (v) => Math.max(0, Math.min(1, v))
 
 function drawIcon(size, { rounded, pad }) {
-  const bg = [9, 9, 11] // zinc-950
-  const stringCol = [82, 82, 92] // zinc-600
-  const nutCol = [113, 113, 122] // zinc-500
-  const amber = [251, 191, 36] // amber-400
+  const bg = [246, 240, 226] // parchment
+  const stringCol = [185, 166, 130] // string
+  const nutCol = [138, 90, 46] // wood
+  const amber = [188, 74, 10] // ember dots
 
   const buf = Buffer.alloc(size * size * 4)
   const p = size * pad

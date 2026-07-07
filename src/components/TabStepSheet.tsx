@@ -53,7 +53,7 @@ export default function TabStepSheet({
           <div className="mb-1 flex">
             <div className="w-8" />
             {cols.map((c, i) => (
-              <div key={c.id} className={`w-10 text-center text-[10px] ${i === selCol ? 'text-amber-300' : 'text-zinc-600'}`}>
+              <div key={c.id} className={`w-10 text-center text-[10px] font-semibold ${i === selCol ? 'text-ember' : 'text-faint'}`}>
                 {i + 1}
               </div>
             ))}
@@ -62,7 +62,7 @@ export default function TabStepSheet({
             const s = 5 - row
             return (
               <div key={s} className="flex">
-                <div className="flex w-8 items-center justify-center font-mono text-xs text-zinc-500">{STRING_NAMES[s]}</div>
+                <div className="flex w-8 items-center justify-center font-mono text-xs text-faint">{STRING_NAMES[s]}</div>
                 {cols.map((c, i) => {
                   const selected = i === selCol && s === sel.str
                   const v = c.cells[s]
@@ -70,10 +70,12 @@ export default function TabStepSheet({
                     <button
                       key={c.id}
                       onClick={() => setSel({ col: i, str: s })}
-                      className={`string-line flex h-10 w-10 items-center justify-center ${selected ? 'rounded-md ring-2 ring-amber-400' : ''}`}
+                      className={`string-line flex h-10 w-10 items-center justify-center ${selected ? 'rounded-md bg-cream ring-2 ring-wood' : ''}`}
                     >
                       {v !== null && (
-                        <span className="bg-zinc-900 px-0.5 font-mono text-sm">{v === 'x' ? '×' : v}</span>
+                        <span className={`px-0.5 font-mono text-sm font-semibold ${selected ? 'bg-cream' : 'bg-surface'}`}>
+                          {v === 'x' ? '×' : v}
+                        </span>
                       )}
                     </button>
                   )
@@ -89,23 +91,27 @@ export default function TabStepSheet({
           <button
             key={n}
             onClick={() => setCell(n)}
-            className="h-10 rounded-lg bg-zinc-800 font-mono text-sm font-semibold text-zinc-100 hover:bg-zinc-700 active:bg-amber-400 active:text-zinc-950"
+            className="h-10 rounded-lg bg-cream font-mono text-sm font-semibold text-ink shadow-xs hover:bg-line active:bg-wood active:text-[#fdf6e6]"
           >
             {n}
           </button>
         ))}
       </div>
       <div className="mt-1.5 grid grid-cols-4 gap-1.5">
-        <button onClick={() => setCell('x')} className="h-10 rounded-lg bg-zinc-800 text-sm font-semibold hover:bg-zinc-700">
+        <button onClick={() => setCell('x')} className="h-10 rounded-lg bg-cream text-sm font-semibold text-ink shadow-xs hover:bg-line">
           × mute
         </button>
-        <button onClick={() => setCell(null)} className="h-10 rounded-lg bg-zinc-800 text-sm font-semibold hover:bg-zinc-700">
+        <button onClick={() => setCell(null)} className="h-10 rounded-lg bg-cream text-sm font-semibold text-ink shadow-xs hover:bg-line">
           clear
         </button>
-        <button onClick={addColumn} className="h-10 rounded-lg bg-zinc-800 text-sm font-semibold hover:bg-zinc-700">
+        <button onClick={addColumn} className="h-10 rounded-lg bg-cream text-sm font-semibold text-ink shadow-xs hover:bg-line">
           + column
         </button>
-        <button onClick={removeColumn} disabled={cols.length <= 1} className="h-10 rounded-lg bg-zinc-800 text-sm font-semibold hover:bg-zinc-700 disabled:opacity-40">
+        <button
+          onClick={removeColumn}
+          disabled={cols.length <= 1}
+          className="h-10 rounded-lg bg-cream text-sm font-semibold text-ink shadow-xs hover:bg-line disabled:opacity-40"
+        >
           − column
         </button>
       </div>

@@ -3,12 +3,12 @@ import { CloseIcon } from './icons'
 
 export const btn =
   'inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-colors select-none disabled:opacity-40'
-export const btnGhost = `${btn} text-zinc-300 hover:bg-zinc-800 active:bg-zinc-700`
-export const btnSolid = `${btn} bg-amber-400 text-zinc-950 hover:bg-amber-300 active:bg-amber-500`
-export const btnOutline = `${btn} border border-zinc-700 text-zinc-200 hover:bg-zinc-800`
+export const btnGhost = `${btn} text-soft hover:bg-cream active:bg-line`
+export const btnSolid = `${btn} btn-wood text-[#fdf6e6] shadow-sm hover:brightness-110 active:brightness-95`
+export const btnOutline = `${btn} border border-line bg-surface text-ink shadow-xs hover:bg-cream`
 
 export const inputCls =
-  'rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 placeholder:text-zinc-500 focus:border-amber-400 focus:outline-none'
+  'rounded-lg border border-line bg-surface px-3 py-2 text-ink shadow-xs placeholder:text-faint focus:border-wood focus:outline-none'
 
 /** Bottom sheet on small screens, centered dialog on larger ones. */
 export function Sheet({
@@ -32,14 +32,14 @@ export function Sheet({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center" role="dialog" aria-modal>
-      <div className="absolute inset-0 bg-black/70" onClick={onClose} />
+      <div className="absolute inset-0 bg-ink/35" onClick={onClose} />
       <div
-        className={`relative flex max-h-[88dvh] w-full flex-col rounded-t-2xl border border-zinc-800 bg-zinc-900 shadow-2xl sm:m-4 sm:rounded-2xl ${
+        className={`relative flex max-h-[88dvh] w-full flex-col rounded-t-2xl border border-line bg-surface shadow-2xl shadow-ink/20 sm:m-4 sm:rounded-2xl ${
           wide ? 'sm:max-w-2xl' : 'sm:max-w-md'
         }`}
       >
-        <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-          <h2 className="text-base font-semibold">{title}</h2>
+        <div className="flex items-center justify-between border-b border-line px-4 py-3">
+          <h2 className="font-display text-base font-bold">{title}</h2>
           <button className={`${btnGhost} h-8 w-8`} onClick={onClose} aria-label="Close">
             <CloseIcon width={18} height={18} />
           </button>
@@ -70,12 +70,20 @@ export function Stepper({
 }) {
   const set = (v: number) => onChange(Math.min(max, Math.max(min, v)))
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-lg border border-zinc-700 bg-zinc-900">
-      <button className="h-9 w-9 rounded-l-lg text-lg text-zinc-300 hover:bg-zinc-800" onClick={() => set(value - step)} aria-label={`Decrease ${label ?? ''}`}>
+    <div className="inline-flex items-center gap-0.5 rounded-lg border border-line bg-surface shadow-xs">
+      <button
+        className="h-9 w-9 rounded-l-lg text-lg text-soft hover:bg-cream"
+        onClick={() => set(value - step)}
+        aria-label={`Decrease ${label ?? ''}`}
+      >
         −
       </button>
       <span className="min-w-10 text-center text-sm font-semibold tabular-nums">{format ? format(value) : value}</span>
-      <button className="h-9 w-9 rounded-r-lg text-lg text-zinc-300 hover:bg-zinc-800" onClick={() => set(value + step)} aria-label={`Increase ${label ?? ''}`}>
+      <button
+        className="h-9 w-9 rounded-r-lg text-lg text-soft hover:bg-cream"
+        onClick={() => set(value + step)}
+        aria-label={`Increase ${label ?? ''}`}
+      >
         +
       </button>
     </div>
@@ -84,7 +92,7 @@ export function Stepper({
 
 export function EmptyHint({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-zinc-800 px-4 py-6 text-center text-sm text-zinc-500">
+    <div className="rounded-xl border border-dashed border-string/70 px-4 py-6 text-center text-sm text-soft">
       {children}
     </div>
   )

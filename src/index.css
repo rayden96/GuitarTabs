@@ -1,11 +1,28 @@
 @import 'tailwindcss';
 
+@theme {
+  /* Retro wood & parchment palette */
+  --color-paper: #f6f0e2; /* page background */
+  --color-surface: #fdfaf1; /* cards, sheets */
+  --color-cream: #efe5cd; /* hover fills, chips */
+  --color-line: #e0d4b8; /* borders */
+  --color-string: #b9a682; /* tab string lines, fret wires */
+  --color-ink: #362a1e; /* primary text */
+  --color-soft: #77664f; /* secondary text */
+  --color-faint: #ab9a7f; /* decorative text */
+  --color-wood: #8a5a2e; /* primary accent */
+  --color-wood-deep: #64411d; /* headings, active accents */
+  --color-ember: #bc4a0a; /* playing highlight */
+
+  --font-display: Georgia, 'Palatino Linotype', Palatino, 'Times New Roman', serif;
+}
+
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  @apply bg-paper text-ink antialiased;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
 }
@@ -15,9 +32,20 @@ button,
   touch-action: manipulation;
 }
 
+/* Warm wooden gradient for primary actions */
+.btn-wood {
+  background-image: linear-gradient(180deg, #9a6a38, #7c4f24);
+}
+
 /* Horizontal string line drawn through the middle of a tab cell */
 .string-line {
-  background-image: linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--color-zinc-700) calc(50% - 0.5px), var(--color-zinc-700) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  background-image: linear-gradient(
+    to bottom,
+    transparent calc(50% - 0.5px),
+    var(--color-string) calc(50% - 0.5px),
+    var(--color-string) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
 }
 
 .no-scrollbar {

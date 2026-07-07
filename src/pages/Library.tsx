@@ -11,13 +11,15 @@ function SongRow({ song, onMenu }: { song: SongRecord; onMenu: () => void }) {
   const navigate = useNavigate()
   return (
     <div
-      className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-zinc-900"
+      className="group flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-cream/70"
       onClick={() => navigate(`/song/${song.id}/play`)}
     >
-      <MusicIcon className="shrink-0 text-zinc-600" />
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cream text-wood">
+        <MusicIcon width={18} height={18} />
+      </span>
       <div className="min-w-0 flex-1">
-        <div className="truncate font-medium">{song.title}</div>
-        <div className="truncate text-xs text-zinc-500">
+        <div className="truncate font-semibold">{song.title}</div>
+        <div className="truncate text-xs text-soft">
           {song.artist && <span>{song.artist} · </span>}♩ {song.tempo} · {song.timeSignature.beats}/{song.timeSignature.unit}
         </div>
       </div>
@@ -71,14 +73,14 @@ export default function Library() {
 
   return (
     <div className="px-4 pb-24 pt-safe">
-      <header className="flex items-center justify-between py-4">
-        <h1 className="text-xl font-bold tracking-tight">Guitar Tabs</h1>
+      <header className="flex items-center justify-between border-b border-line py-4">
+        <h1 className="font-display text-2xl font-bold tracking-tight text-wood-deep">Guitar Tabs</h1>
         <SyncIndicator />
       </header>
 
-      <div className="mb-4 flex items-center gap-2">
+      <div className="my-4 flex items-center gap-2">
         <div className="relative flex-1">
-          <SearchIcon className="absolute top-1/2 left-3 -translate-y-1/2 text-zinc-500" width={16} height={16} />
+          <SearchIcon className="absolute top-1/2 left-3 -translate-y-1/2 text-faint" width={16} height={16} />
           <input className={`${inputCls} w-full pl-9`} placeholder="Search songs…" value={query} onChange={(e) => setQuery(e.target.value)} />
         </div>
         <button className={`${btnGhost} h-10 w-10`} onClick={() => setFolderDialog({ id: null, name: '' })} aria-label="New folder">
@@ -91,8 +93,8 @@ export default function Library() {
 
       {songs.length === 0 && (
         <div className="mt-16 flex flex-col items-center text-center">
-          <MusicIcon width={48} height={48} className="text-zinc-700" />
-          <p className="mt-4 mb-6 text-zinc-400">No songs yet. Add the first song you're learning.</p>
+          <MusicIcon width={48} height={48} className="text-string" />
+          <p className="mt-4 mb-6 text-soft">No songs yet. Add the first song you're learning.</p>
           <button className={`${btnSolid} px-4 py-2`} onClick={() => void addSong()}>
             <PlusIcon width={18} height={18} /> Add a song
           </button>
@@ -111,21 +113,21 @@ export default function Library() {
                   className="flex min-w-0 flex-1 items-center gap-2 text-left"
                   onClick={() => setCollapsed((c) => ({ ...c, [folder.id]: !c[folder.id] }))}
                 >
-                  <ChevronIcon width={16} height={16} className={`shrink-0 text-zinc-500 transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
-                  <FolderIcon width={16} height={16} className="shrink-0 text-amber-400/80" />
-                  <span className="truncate text-sm font-semibold">{folder.name}</span>
-                  <span className="text-xs text-zinc-600">{inFolder.length}</span>
+                  <ChevronIcon width={16} height={16} className={`shrink-0 text-faint transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
+                  <FolderIcon width={16} height={16} className="shrink-0 text-wood" />
+                  <span className="truncate text-sm font-bold">{folder.name}</span>
+                  <span className="text-xs text-faint">{inFolder.length}</span>
                 </button>
                 <button className={`${btnGhost} h-8 w-8`} onClick={() => setMenuFolder(folder)} aria-label={`Actions for folder ${folder.name}`}>
                   <DotsIcon width={15} height={15} />
                 </button>
               </div>
               {!isCollapsed && (
-                <div className="ml-3 border-l border-zinc-800/70 pl-2">
+                <div className="ml-4 border-l-2 border-line pl-2">
                   {inFolder.map((s) => (
                     <SongRow key={s.id} song={s} onMenu={() => setMenuSong(s)} />
                   ))}
-                  {inFolder.length === 0 && <p className="px-3 py-2 text-xs text-zinc-600">Empty folder</p>}
+                  {inFolder.length === 0 && <p className="px-3 py-2 text-xs text-faint">Empty folder</p>}
                 </div>
               )}
             </section>
@@ -159,12 +161,12 @@ export default function Library() {
                 },
               },
             ].map((a) => (
-              <button key={a.label} className="flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-zinc-800" onClick={a.fn}>
-                <span className="text-zinc-400">{a.icon}</span> {a.label}
+              <button key={a.label} className="flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-cream" onClick={a.fn}>
+                <span className="text-soft">{a.icon}</span> {a.label}
               </button>
             ))}
             <button
-              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left text-rose-400 hover:bg-zinc-800"
+              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left text-rose-700 hover:bg-cream"
               onClick={() => {
                 if (confirm(`Delete "${menuSong.title}"?`)) {
                   void deleteSong(menuSong.id)
@@ -185,13 +187,13 @@ export default function Library() {
             {[{ id: null as string | null, name: 'No folder' }, ...folders].map((f) => (
               <button
                 key={f.id ?? 'root'}
-                className={`flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-zinc-800 ${moveSong.folderId === f.id ? 'text-amber-300' : ''}`}
+                className={`flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-cream ${moveSong.folderId === f.id ? 'font-semibold text-wood-deep' : ''}`}
                 onClick={() => {
                   void moveSongToFolder(moveSong.id, f.id)
                   setMoveSong(null)
                 }}
               >
-                <FolderIcon width={18} height={18} className="text-zinc-400" /> {f.name}
+                <FolderIcon width={18} height={18} className="text-soft" /> {f.name}
               </button>
             ))}
           </div>
@@ -203,16 +205,16 @@ export default function Library() {
         <Sheet title={menuFolder.name} onClose={() => setMenuFolder(null)}>
           <div className="flex flex-col">
             <button
-              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-zinc-800"
+              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left hover:bg-cream"
               onClick={() => {
                 setFolderDialog({ id: menuFolder.id, name: menuFolder.name })
                 setMenuFolder(null)
               }}
             >
-              <PencilIcon width={18} height={18} className="text-zinc-400" /> Rename
+              <PencilIcon width={18} height={18} className="text-soft" /> Rename
             </button>
             <button
-              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left text-rose-400 hover:bg-zinc-800"
+              className="flex items-center gap-3 rounded-lg px-3 py-3 text-left text-rose-700 hover:bg-cream"
               onClick={() => {
                 if (confirm(`Delete folder "${menuFolder.name}"? Songs inside move to the library root.`)) {
                   void deleteFolder(menuFolder.id)

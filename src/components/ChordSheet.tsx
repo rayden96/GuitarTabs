@@ -42,13 +42,13 @@ export default function ChordSheet({
 
   return (
     <Sheet title={initial ? 'Edit chord' : 'Add chord'} onClose={onClose} wide>
-      <div className="mb-4 flex gap-1 rounded-lg bg-zinc-800 p-1">
+      <div className="mb-4 flex gap-1 rounded-lg bg-cream p-1">
         {(['library', 'custom'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-md py-1.5 text-sm font-medium capitalize ${
-              tab === t ? 'bg-zinc-950 text-zinc-100' : 'text-zinc-400 hover:text-zinc-200'
+            className={`flex-1 rounded-md py-1.5 text-sm font-medium capitalize transition-colors ${
+              tab === t ? 'bg-surface text-ink shadow-xs' : 'text-soft hover:text-ink'
             }`}
           >
             {t === 'library' ? 'Chord library' : 'Custom / edit'}
@@ -66,20 +66,20 @@ export default function ChordSheet({
           />
           {filteredUser.length > 0 && (
             <>
-              <h3 className="mb-1 text-xs font-semibold tracking-wide text-zinc-500 uppercase">My chords</h3>
+              <h3 className="mb-1 text-xs font-semibold tracking-wide text-soft uppercase">My chords</h3>
               <div className="mb-4 grid grid-cols-4 gap-2 sm:grid-cols-6">
                 {filteredUser.map((c) => (
                   <div key={c.id} className="relative">
                     <button
                       onClick={() => apply(c.name, c.shape)}
-                      className="flex w-full flex-col items-center rounded-xl border border-zinc-800 py-2 hover:border-amber-400/50 hover:bg-zinc-800/50"
+                      className="flex w-full flex-col items-center rounded-xl border border-line bg-surface py-2 shadow-xs hover:border-wood/60 hover:bg-cream/50"
                     >
                       <ChordDiagram shape={c.shape} size={52} />
-                      <span className="mt-1 text-xs font-semibold">{c.name}</span>
+                      <span className="font-display mt-1 text-sm font-bold">{c.name}</span>
                     </button>
                     <button
                       onClick={() => void deleteUserChord(c.id)}
-                      className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-700 text-zinc-300 hover:bg-rose-500 hover:text-white"
+                      className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-line text-soft hover:bg-rose-600 hover:text-white"
                       aria-label={`Delete saved chord ${c.name}`}
                     >
                       <CloseIcon width={10} height={10} />
@@ -94,15 +94,15 @@ export default function ChordSheet({
               <button
                 key={c.name}
                 onClick={() => apply(c.name, c.shape)}
-                className="flex flex-col items-center rounded-xl border border-zinc-800 py-2 hover:border-amber-400/50 hover:bg-zinc-800/50"
+                className="flex flex-col items-center rounded-xl border border-line bg-surface py-2 shadow-xs hover:border-wood/60 hover:bg-cream/50"
               >
                 <ChordDiagram shape={c.shape} size={52} />
-                <span className="mt-1 text-xs font-semibold">{c.name}</span>
+                <span className="font-display mt-1 text-sm font-bold">{c.name}</span>
               </button>
             ))}
           </div>
           {filteredLibrary.length === 0 && filteredUser.length === 0 && (
-            <p className="py-6 text-center text-sm text-zinc-500">No chords match "{query}"</p>
+            <p className="py-6 text-center text-sm text-soft">No chords match "{query}"</p>
           )}
         </div>
       ) : (

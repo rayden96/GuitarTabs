@@ -31,10 +31,10 @@ function StepBlock({
     <Tag
       data-step-id={step.id}
       onClick={onClick}
-      className={`relative flex shrink-0 flex-col px-0.5 ${selected ? 'rounded-md ring-1 ring-amber-400' : ''} ${onClick ? 'cursor-pointer' : ''}`}
+      className={`relative flex shrink-0 flex-col px-0.5 ${selected ? 'rounded-md bg-cream ring-1 ring-wood' : ''} ${onClick ? 'cursor-pointer' : ''}`}
       style={{ minWidth }}
     >
-      <div className={`h-5 truncate text-center text-xs font-semibold ${current ? 'text-amber-300' : 'text-zinc-300'}`}>
+      <div className={`font-display h-5 truncate text-center text-sm font-bold ${current ? 'text-ember' : 'text-wood-deep'}`}>
         {isChord ? (step.content as { name: string }).name : ''}
       </div>
       {Array.from({ length: 6 }, (_, row) => {
@@ -51,7 +51,9 @@ function StepBlock({
                 <span key={ci} className="flex items-center justify-center">
                   {text !== null && (
                     <span
-                      className={`bg-zinc-950 px-0.5 font-mono text-[13px] leading-none ${current ? 'text-amber-300' : 'text-zinc-100'}`}
+                      className={`px-0.5 font-mono text-[13px] leading-none font-semibold ${
+                        selected ? 'bg-cream' : 'bg-paper'
+                      } ${current ? 'text-ember' : 'text-ink'}`}
                     >
                       {text}
                     </span>
@@ -63,9 +65,9 @@ function StepBlock({
         )
       })}
       {isEmpty && !isChord && (
-        <div className="pointer-events-none absolute inset-x-1 top-5 bottom-0 rounded border border-dashed border-zinc-700/60" />
+        <div className="pointer-events-none absolute inset-x-1 top-5 bottom-0 rounded border border-dashed border-string/70" />
       )}
-      {current && <div className="absolute inset-x-1 -bottom-1.5 h-1 rounded-full bg-amber-400" />}
+      {current && <div className="absolute inset-x-1 -bottom-1.5 h-1 rounded-full bg-ember" />}
     </Tag>
   )
 }
@@ -93,10 +95,10 @@ export default function TabNotation({
   return (
     <div className="no-scrollbar flex items-start overflow-x-auto pb-2">
       {showStringNames && (
-        <div className="sticky left-0 z-10 mr-1 shrink-0 bg-zinc-950 pr-1">
+        <div className="bg-paper sticky left-0 z-10 mr-1 shrink-0 pr-1">
           <div className="h-5" />
           {Array.from({ length: 6 }, (_, row) => (
-            <div key={row} className="flex h-[22px] items-center font-mono text-[10px] text-zinc-600">
+            <div key={row} className="text-faint flex h-[22px] items-center font-mono text-[10px]">
               {STRING_NAMES[5 - row]}
             </div>
           ))}
@@ -111,7 +113,7 @@ export default function TabNotation({
               {atBarStart && (
                 <div className="mx-0.5 shrink-0">
                   <div className="h-5" />
-                  <div className="h-[132px] w-px bg-zinc-600" />
+                  <div className="bg-string h-[132px] w-px" />
                 </div>
               )}
               <StepBlock

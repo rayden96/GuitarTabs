@@ -29,27 +29,50 @@ export default function ChordDiagram({ shape, size = 64 }: { shape: FretShape; s
     <svg viewBox={`0 0 ${W} ${H}`} width={size} height={(size * H) / W} aria-hidden>
       {/* frets */}
       {Array.from({ length: 6 }, (_, i) => (
-        <line key={i} x1={left} x2={right} y1={top + i * rowH} y2={top + i * rowH} stroke="var(--color-zinc-600)" strokeWidth={i === 0 && base === 1 ? 3 : 1} />
+        <line
+          key={i}
+          x1={left}
+          x2={right}
+          y1={top + i * rowH}
+          y2={top + i * rowH}
+          stroke={i === 0 && base === 1 ? 'var(--color-wood-deep)' : 'var(--color-string)'}
+          strokeWidth={i === 0 && base === 1 ? 3 : 1}
+        />
       ))}
       {/* strings */}
       {Array.from({ length: 6 }, (_, i) => (
-        <line key={i} x1={left + i * colW} x2={left + i * colW} y1={top} y2={top + 5 * rowH} stroke="var(--color-zinc-600)" strokeWidth={1} />
+        <line
+          key={i}
+          x1={left + i * colW}
+          x2={left + i * colW}
+          y1={top}
+          y2={top + 5 * rowH}
+          stroke="var(--color-string)"
+          strokeWidth={1}
+        />
       ))}
       {base > 1 && (
-        <text x={2} y={top + rowH - 3} fontSize={7.5} fill="var(--color-zinc-400)">
+        <text x={2} y={top + rowH - 3} fontSize={7.5} fill="var(--color-soft)">
           {base}
         </text>
       )}
       {marks.map((m, i) => (
-        <text key={i} x={m.x} y={top - 4} fontSize={8} textAnchor="middle" fill={m.label === 'o' ? 'var(--color-zinc-300)' : 'var(--color-zinc-500)'}>
+        <text
+          key={i}
+          x={m.x}
+          y={top - 4}
+          fontSize={8}
+          textAnchor="middle"
+          fill={m.label === 'o' ? 'var(--color-soft)' : 'var(--color-faint)'}
+        >
           {m.label}
         </text>
       ))}
       {dots.map((d, i) => (
         <g key={i}>
-          <circle cx={d.x} cy={d.y} r={4.4} fill="var(--color-amber-400)" />
+          <circle cx={d.x} cy={d.y} r={4.4} fill="var(--color-wood)" />
           {d.finger != null && (
-            <text x={d.x} y={d.y + 2.6} fontSize={7} textAnchor="middle" fill="var(--color-zinc-950)" fontWeight={700}>
+            <text x={d.x} y={d.y + 2.6} fontSize={7} textAnchor="middle" fill="var(--color-surface)" fontWeight={700}>
               {d.finger}
             </text>
           )}
