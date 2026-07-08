@@ -26,12 +26,10 @@ vercel dev         # full stack including api/ functions (needs .env)
 1. Push this repo to GitHub and import it into Vercel (framework preset: **Vite**).
 2. In the Vercel project, add the **Neon** integration (Storage → Neon Postgres, free tier). This sets `DATABASE_URL` automatically.
 3. Add an `APP_PASSWORD` environment variable — the single password that protects your data.
-4. Locally, copy `.env.example` to `.env`, fill in the same `DATABASE_URL`, and create the tables:
-   ```sh
-   npm run db:push
-   ```
-5. Deploy. Open the site, tap the key icon, enter your password — sync is on.
-6. On your phone: open the URL, log in, then "Add to Home Screen" to install the PWA.
+4. Deploy. Open the site, tap the key icon, enter your password — sync is on. The database
+   tables are created automatically on first sync (no migration step needed; `npm run db:push`
+   exists only for schema changes later).
+5. On your phone: open the URL, log in, then "Add to Home Screen" to install the PWA.
 
 ## Notes
 

@@ -7,8 +7,10 @@ export default function SyncIndicator() {
   const navigate = useNavigate()
 
   const onClick = () => {
-    if (status === 'loggedOut') navigate('/login')
-    else void syncNow()
+    if (status === 'loggedOut') return navigate('/login')
+    // tooltips don't exist on touch screens — show the failure reason on tap
+    if (status === 'error') alert(`Sync error: ${error ?? 'unknown'}\n\nRetrying now…`)
+    void syncNow()
   }
 
   const view = {

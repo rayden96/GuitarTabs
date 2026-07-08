@@ -64,7 +64,17 @@ export async function syncNow(): Promise<void> {
       useSyncStore.setState({ status: 'loggedOut' })
       return
     }
-    if (!res.ok) throw new Error(`Sync failed (${res.status})`)
+    if (!res.ok) {
+      // surface the server's own message (e.g. a database error) for diagnosis
+      let message = `Sync failed (${res.status})`
+      try {
+        const data = (await res.json()) as { error?: string }
+        if (data.error) message = data.error
+      } catch {
+        // non-JSON body — keep the generic message
+      }
+      throw new Error(message)
+    }
 
     const data = (await res.json()) as { songs: Song[]; folders: Folder[]; serverTime: string }
 
@@ -115,5 +125,17 @@ export function initSync(): void {
   window.addEventListener('offline', () => {
     if (getToken()) useSyncStore.setState({ status: 'offline' })
   })
+  // Pull whenever the app comes back to the foreground (PWA resumed, tab focused),
+  // so edits made on another device show up without a full relaunch…
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && getToken()) void syncNow()
+  })
+  window.addEventListener('focus', () => {
+    if (getToken()) void syncNow()
+  })
+  // …and refresh periodically while the app stays open.
+  setInterval(() => {
+    if (document.visibilityState === 'visible' && navigator.onLine && getToken()) void syncNow()
+  }, 90_000)
   if (getToken()) void syncNow()
 }
