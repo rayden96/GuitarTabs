@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Song } from '../types'
 import { getSong } from '../lib/repo'
-import { buildTimeline, sectionBeatRange, stepAtBeat } from '../lib/songUtils'
+import { buildTimeline, sectionBeatRange, sectionRepeats, stepAtBeat } from '../lib/songUtils'
 import { PlaybackEngine } from '../lib/metronome'
 import { keepAwake } from '../lib/wakeLock'
 import TabNotation from '../components/TabNotation'
@@ -187,10 +187,23 @@ export default function SongPlay() {
         </p>
       )}
 
-      {song.sections.map((section) => (
+      {song.sections.map((section) => {
+        const reps = sectionRepeats(section)
+        const isCurrentSection = isPlaying && currentTlStep?.sectionId === section.id
+        return (
         <section key={section.id} className="mb-6">
           <div className="mb-1 flex items-center gap-2">
             <h2 className="font-display text-sm font-bold tracking-widest text-wood-deep uppercase">{section.name}</h2>
+            {reps > 1 && (
+              <span
+                className={`rounded-md px-1.5 py-0.5 font-mono text-xs font-bold tabular-nums ${
+                  isCurrentSection ? 'bg-ember text-[#fdf6e6]' : 'bg-cream text-wood-deep'
+                }`}
+                title={`Plays ${reps} times`}
+              >
+                {isCurrentSection ? `${(currentTlStep?.repeatIndex ?? 0) + 1}/${reps}` : `×${reps}`}
+              </span>
+            )}
             {section.steps.length > 0 && (
               <button
                 onClick={() => setLoopSectionId(loopSectionId === section.id ? null : section.id)}
@@ -210,7 +223,8 @@ export default function SongPlay() {
             <p className="text-xs text-faint">No steps</p>
           )}
         </section>
-      ))}
+        )
+      })}
 
       {/* count-in overlay */}
       {currentBeat != null && currentBeat < 0 && (

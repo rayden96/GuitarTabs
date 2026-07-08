@@ -31,6 +31,27 @@ describe('buildTimeline', () => {
     expect(tl.totalBeats).toBe(0)
     expect(tl.steps).toHaveLength(0)
   })
+
+  it('expands section repeats into consecutive passes', () => {
+    const song = songWith([chordStep('a1', 4)], [chordStep('b1', 2)])
+    song.sections[0].repeats = 3
+    const tl = buildTimeline(song)
+    expect(tl.totalBeats).toBe(14) // 4×3 + 2
+    expect(tl.steps.map((s) => s.startBeat)).toEqual([0, 4, 8, 12])
+    expect(tl.steps.map((s) => s.repeatIndex)).toEqual([0, 1, 2, 0])
+    // every pass points at the same editor step
+    expect(new Set(tl.steps.slice(0, 3).map((s) => s.stepId)).size).toBe(1)
+    expect(stepAtBeat(tl, 5)?.repeatIndex).toBe(1)
+    expect(stepAtBeat(tl, 13)?.sectionIndex).toBe(1)
+  })
+
+  it('treats missing or invalid repeats as 1', () => {
+    const song = songWith([chordStep('a1', 4)])
+    song.sections[0].repeats = 0
+    expect(buildTimeline(song).totalBeats).toBe(4)
+    delete song.sections[0].repeats
+    expect(buildTimeline(song).totalBeats).toBe(4)
+  })
 })
 
 describe('stepAtBeat', () => {

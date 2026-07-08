@@ -7,6 +7,8 @@ export interface TimelineStep {
   stepIndex: number
   startBeat: number
   beats: number
+  /** 0-based pass through the section when it repeats. */
+  repeatIndex: number
 }
 
 export interface Timeline {
@@ -14,22 +16,29 @@ export interface Timeline {
   totalBeats: number
 }
 
-/** Flatten a song's sections/steps into a beat timeline. */
+export function sectionRepeats(section: Section): number {
+  return Math.max(1, Math.round(section.repeats ?? 1))
+}
+
+/** Flatten a song's sections/steps into a beat timeline, expanding section repeats. */
 export function buildTimeline(song: Song): Timeline {
   const steps: TimelineStep[] = []
   let beat = 0
   song.sections.forEach((section, sectionIndex) => {
-    section.steps.forEach((step, stepIndex) => {
-      steps.push({
-        sectionId: section.id,
-        sectionIndex,
-        stepId: step.id,
-        stepIndex,
-        startBeat: beat,
-        beats: step.beats,
+    for (let repeatIndex = 0; repeatIndex < sectionRepeats(section); repeatIndex++) {
+      section.steps.forEach((step, stepIndex) => {
+        steps.push({
+          sectionId: section.id,
+          sectionIndex,
+          stepId: step.id,
+          stepIndex,
+          startBeat: beat,
+          beats: step.beats,
+          repeatIndex,
+        })
+        beat += step.beats
       })
-      beat += step.beats
-    })
+    }
   })
   return { steps, totalBeats: beat }
 }

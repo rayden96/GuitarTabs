@@ -50,6 +50,8 @@ export interface Section {
   name: string
   strummingPattern: StrummingPattern | null
   steps: Step[]
+  /** How many times this section plays back-to-back (absent = 1, kept optional for older songs). */
+  repeats?: number
 }
 
 export interface TimeSignature {

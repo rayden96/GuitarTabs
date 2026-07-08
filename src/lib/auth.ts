@@ -23,7 +23,17 @@ export async function login(password: string): Promise<{ ok: true } | { ok: fals
       body: JSON.stringify({ password }),
     })
     if (res.status === 401) return { ok: false, error: 'Wrong password' }
-    if (!res.ok) return { ok: false, error: `Login failed (${res.status})` }
+    if (!res.ok) {
+      // surface the server's own message (e.g. "APP_PASSWORD is not configured")
+      let message = `Login failed (${res.status})`
+      try {
+        const data = (await res.json()) as { error?: string }
+        if (data.error) message = `${data.error} (${res.status})`
+      } catch {
+        // non-JSON body (e.g. a crashed function) — keep the generic message
+      }
+      return { ok: false, error: message }
+    }
     const data = (await res.json()) as { token: string }
     setToken(data.token)
     return { ok: true }

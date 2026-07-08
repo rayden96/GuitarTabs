@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq, gt } from 'drizzle-orm'
-import { getDb } from './_lib/db'
-import { isAuthorized } from './_lib/auth'
-import { songs, folders } from './_lib/schema'
+import { getDb } from './_lib/db.js'
+import { isAuthorized } from './_lib/auth.js'
+import { songs, folders } from './_lib/schema.js'
 
 interface PushedSong {
   id: string

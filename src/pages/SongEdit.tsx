@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import type { ChordContent, Song, Step, TabContent } from '../types'
 import { getSong, saveSong, listFolders, newSection } from '../lib/repo'
 import { newId } from '../lib/id'
-import { defaultPattern, resizePattern } from '../lib/songUtils'
+import { defaultPattern, resizePattern, sectionRepeats } from '../lib/songUtils'
 import TabNotation from '../components/TabNotation'
 import ChordSheet from '../components/ChordSheet'
 import TabStepSheet from '../components/TabStepSheet'
@@ -359,7 +359,7 @@ export default function SongEdit() {
             </div>
           )}
 
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <button className={`${btnOutline} h-9 px-3 text-sm`} onClick={() => addChord(section.id)}>
               <PlusIcon width={14} height={14} /> Chord
             </button>
@@ -374,6 +374,17 @@ export default function SongEdit() {
                 <PlusIcon width={14} height={14} /> Strumming
               </button>
             )}
+            <div className="ml-auto flex items-center gap-1.5">
+              <span className="text-xs text-soft">Repeat</span>
+              <Stepper
+                value={sectionRepeats(section)}
+                min={1}
+                max={99}
+                label="section repeats"
+                format={(v) => `×${v}`}
+                onChange={(v) => update((d) => (d.sections[si].repeats = v))}
+              />
+            </div>
           </div>
 
           {section.strummingPattern && (
